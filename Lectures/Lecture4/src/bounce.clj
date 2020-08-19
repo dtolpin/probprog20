@@ -126,33 +126,35 @@
 (defn simulate-world
   "simulates the world for 20 sec. outside of quil
   creating 20 balls, one every 2/3's of a sec."
-  [world]
-  (let [dt (/ 1.0 30.0)
-        duration 20.0
-        dts-between-balls 20
-        bodies (loop [t 0.0 c 0 bodies []]
-                       (if (> t duration)
-                         bodies
-                         (do
-                           (step! world dt)
-                           (if (and (= c dts-between-balls)
-                                    (< (count bodies) 20))
-                             (let [new-ball
-                                   (body! world
+  ([world rand] ; stochastic condition is passed as an argument
+   (let [dt (/ 1.0 30.0)
+         duration 20.0
+         dts-between-balls 20
+         bodies (loop [t 0.0 c 0 bodies []]
+                  (if (> t duration)
+                    bodies
+                    (do
+                      (step! world dt)
+                      (if (and (= c dts-between-balls)
+                               (< (count bodies) 20))
+                        (let [new-ball
+                              (body! world
                                      {:position
                                       ;[-5 (+ 8.25 0.1)]};(sample (gamma 0.2 0.2)))]}
-                                      [-5 (+ 8.25 0.1 (* 0.1 (rand)))]}
+                                      [-5 (+ 8.25 0.1 (* 0.1 (nth rand (count bodies))))]}
                                      (assoc circ-attr
-                                       :shape (circle 0.25)
-                                       :restitution 0.5
-                                       :group-index 1))]
-                               (recur (+ t dt)
-                                      0
-                                      (conj bodies new-ball)))
-                             (recur (+ t dt)
-                                    (+ c 1)
-                                    bodies)))))]
-    {:balls bodies}))
+                                            :shape (circle 0.25)
+                                            :restitution 0.5
+                                            :group-index 1))]
+                          (recur (+ t dt)
+                                 0
+                                 (conj bodies new-ball)))
+                        (recur (+ t dt)
+                               (+ c 1)
+                               bodies)))))]
+     {:balls bodies}))
+  ([world]
+   (simulate-world world (repeatedly 20 rand))))
 
 
 (defn display-static-world [bumper-positions balls]

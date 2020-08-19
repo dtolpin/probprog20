@@ -5,10 +5,11 @@
 ;; **
 
 ;; @@
-(use 'nstools.ns)
+(ns bounce-worksheet
+  (:require [gorilla-plot.core :as plot])
+  (:use [anglican core emit runtime
+         [state :only [get-predicts get-log-weight get-result]]])
 
-(ns+ bounce-worksheet
-     (:like anglican-user.worksheet)
      (:require [org.nfrac.cljbox2d.core :refer [position]])
      (:use [anglican [state 
                       :only [get-predicts 
@@ -23,7 +24,7 @@
          :reload)
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"},{"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}],"value":"[nil,nil]"},{"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}],"value":"[[nil,nil],nil]"}
+;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"},{"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}],"value":"[nil,nil]"}
 ;; <=
 
 ;; @@
