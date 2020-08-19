@@ -4,18 +4,25 @@
 ;;; # 2D physics example from lecture 4
 ;; **
 
+;; **
+;;; _A version with stochastic conditioning_
+;; **
+
 ;; @@
+;; nstools did not work for me, something is broken and I haven't succeeded in fixing so far.
+;; Rewrote this fragment using plain Clojure ns form.
 (ns bounce-worksheet
   (:require [gorilla-plot.core :as plot])
   (:use [anglican core emit runtime
          [state :only [get-predicts get-log-weight get-result]]])
+     (:require [org.nfrac.cljbox2d.core :refer [position]]))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}
+;; <=
 
-     (:require [org.nfrac.cljbox2d.core :refer [position]])
-     (:use [anglican [state 
-                      :only [get-predicts 
-                             get-log-weight 
-                             get-result]]]))
-
+;; @@
+;; I split the above fragment to avoid re-declaring the namespace every time
 (require '[bounce :refer [create-world
                           show-world-simulation
                           simulate-world
@@ -24,7 +31,7 @@
          :reload)
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"},{"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}],"value":"[nil,nil]"}
+;;; {"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}
 ;; <=
 
 ;; @@
@@ -33,7 +40,7 @@
 (show-world-simulation bumper-location1)
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/bumper-location1</span>","value":"#'bounce-worksheet/bumper-location1"},{"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x2e01259b &quot;quil.Applet[panel1,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x2e01259b \"quil.Applet[panel1,0,0,600x500,layout=java.awt.FlowLayout]\"]"}],"value":"[#'bounce-worksheet/bumper-location1,#object[quil.Applet 0x2e01259b \"quil.Applet[panel1,0,0,600x500,layout=java.awt.FlowLayout]\"]]"}
+;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/bumper-location1</span>","value":"#'bounce-worksheet/bumper-location1"},{"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x148b0a0d &quot;quil.Applet[panel0,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x148b0a0d \"quil.Applet[panel0,0,0,600x500,layout=java.awt.FlowLayout]\"]"}],"value":"[#'bounce-worksheet/bumper-location1,#object[quil.Applet 0x148b0a0d \"quil.Applet[panel0,0,0,600x500,layout=java.awt.FlowLayout]\"]]"}
 ;; <=
 
 ;; @@
@@ -42,7 +49,7 @@
 (show-world-simulation bumper-location2)
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/bumper-location2</span>","value":"#'bounce-worksheet/bumper-location2"},{"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x6b67a6a6 &quot;quil.Applet[panel2,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x6b67a6a6 \"quil.Applet[panel2,0,0,600x500,layout=java.awt.FlowLayout]\"]"}],"value":"[#'bounce-worksheet/bumper-location2,#object[quil.Applet 0x6b67a6a6 \"quil.Applet[panel2,0,0,600x500,layout=java.awt.FlowLayout]\"]]"}
+;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/bumper-location2</span>","value":"#'bounce-worksheet/bumper-location2"},{"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x6e1c7f84 &quot;quil.Applet[panel1,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x6e1c7f84 \"quil.Applet[panel1,0,0,600x500,layout=java.awt.FlowLayout]\"]"}],"value":"[#'bounce-worksheet/bumper-location2,#object[quil.Applet 0x6e1c7f84 \"quil.Applet[panel1,0,0,600x500,layout=java.awt.FlowLayout]\"]]"}
 ;; <=
 
 ;; @@
@@ -52,7 +59,7 @@
 (show-world-simulation bumper-location-example)
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/bumper-location-example</span>","value":"#'bounce-worksheet/bumper-location-example"},{"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x35cd3363 &quot;quil.Applet[panel6,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x35cd3363 \"quil.Applet[panel6,0,0,600x500,layout=java.awt.FlowLayout]\"]"}],"value":"[#'bounce-worksheet/bumper-location-example,#object[quil.Applet 0x35cd3363 \"quil.Applet[panel6,0,0,600x500,layout=java.awt.FlowLayout]\"]]"}
+;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/bumper-location-example</span>","value":"#'bounce-worksheet/bumper-location-example"},{"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0xe543edf &quot;quil.Applet[panel2,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0xe543edf \"quil.Applet[panel2,0,0,600x500,layout=java.awt.FlowLayout]\"]"}],"value":"[#'bounce-worksheet/bumper-location-example,#object[quil.Applet 0xe543edf \"quil.Applet[panel2,0,0,600x500,layout=java.awt.FlowLayout]\"]]"}
 ;; <=
 
 ;; @@
@@ -97,14 +104,14 @@
 best-sample0
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/lazy-samples0</span>","value":"#'bounce-worksheet/lazy-samples0"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/samples0</span>","value":"#'bounce-worksheet/samples0"}],"value":"[#'bounce-worksheet/lazy-samples0,#'bounce-worksheet/samples0]"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/best-sample0</span>","value":"#'bounce-worksheet/best-sample0"}],"value":"[[#'bounce-worksheet/lazy-samples0,#'bounce-worksheet/samples0],#'bounce-worksheet/best-sample0]"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>1</span>","value":"1"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-2.872259539861338</span>","value":"-2.872259539861338"},{"type":"html","content":"<span class='clj-double'>7.375506555692743</span>","value":"7.375506555692743"}],"value":"(-2.872259539861338 7.375506555692743)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-1.8127877780975106</span>","value":"-1.8127877780975106"},{"type":"html","content":"<span class='clj-double'>0.7351898628482134</span>","value":"0.7351898628482134"}],"value":"(-1.8127877780975106 0.7351898628482134)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-0.619772723127118</span>","value":"-0.619772723127118"},{"type":"html","content":"<span class='clj-double'>7.52750665075056</span>","value":"7.52750665075056"}],"value":"(-0.619772723127118 7.52750665075056)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>8.744790667663144</span>","value":"8.744790667663144"},{"type":"html","content":"<span class='clj-double'>8.272076088039155</span>","value":"8.272076088039155"}],"value":"(8.744790667663144 8.272076088039155)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>8.039148713643517</span>","value":"8.039148713643517"},{"type":"html","content":"<span class='clj-double'>1.3476825428581396</span>","value":"1.3476825428581396"}],"value":"(8.039148713643517 1.3476825428581396)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>5.2323837211909225</span>","value":"5.2323837211909225"},{"type":"html","content":"<span class='clj-double'>1.9746064424247112</span>","value":"1.9746064424247112"}],"value":"(5.2323837211909225 1.9746064424247112)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>2.863653989473061</span>","value":"2.863653989473061"},{"type":"html","content":"<span class='clj-double'>6.3489210858392475</span>","value":"6.3489210858392475"}],"value":"(2.863653989473061 6.3489210858392475)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>12.763078283441669</span>","value":"12.763078283441669"},{"type":"html","content":"<span class='clj-double'>4.64709974968831</span>","value":"4.64709974968831"}],"value":"(12.763078283441669 4.64709974968831)"}],"value":"((-2.872259539861338 7.375506555692743) (-1.8127877780975106 0.7351898628482134) (-0.619772723127118 7.52750665075056) (8.744790667663144 8.272076088039155) (8.039148713643517 1.3476825428581396) (5.2323837211909225 1.9746064424247112) (2.863653989473061 6.3489210858392475) (12.763078283441669 4.64709974968831))"}],"value":"(1 ((-2.872259539861338 7.375506555692743) (-1.8127877780975106 0.7351898628482134) (-0.619772723127118 7.52750665075056) (8.744790667663144 8.272076088039155) (8.039148713643517 1.3476825428581396) (5.2323837211909225 1.9746064424247112) (2.863653989473061 6.3489210858392475) (12.763078283441669 4.64709974968831)))"}],"value":"[[[#'bounce-worksheet/lazy-samples0,#'bounce-worksheet/samples0],#'bounce-worksheet/best-sample0],(1 ((-2.872259539861338 7.375506555692743) (-1.8127877780975106 0.7351898628482134) (-0.619772723127118 7.52750665075056) (8.744790667663144 8.272076088039155) (8.039148713643517 1.3476825428581396) (5.2323837211909225 1.9746064424247112) (2.863653989473061 6.3489210858392475) (12.763078283441669 4.64709974968831)))]"}
+;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/lazy-samples0</span>","value":"#'bounce-worksheet/lazy-samples0"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/samples0</span>","value":"#'bounce-worksheet/samples0"}],"value":"[#'bounce-worksheet/lazy-samples0,#'bounce-worksheet/samples0]"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/best-sample0</span>","value":"#'bounce-worksheet/best-sample0"}],"value":"[[#'bounce-worksheet/lazy-samples0,#'bounce-worksheet/samples0],#'bounce-worksheet/best-sample0]"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>1</span>","value":"1"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>10.305420494927546</span>","value":"10.305420494927546"},{"type":"html","content":"<span class='clj-double'>9.588391659903625</span>","value":"9.588391659903625"}],"value":"(10.305420494927546 9.588391659903625)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>3.4844753909507107</span>","value":"3.4844753909507107"},{"type":"html","content":"<span class='clj-double'>2.0646000723020763</span>","value":"2.0646000723020763"}],"value":"(3.4844753909507107 2.0646000723020763)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-0.9820216446274315</span>","value":"-0.9820216446274315"},{"type":"html","content":"<span class='clj-double'>1.7939724465821705</span>","value":"1.7939724465821705"}],"value":"(-0.9820216446274315 1.7939724465821705)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>2.318456538467948</span>","value":"2.318456538467948"},{"type":"html","content":"<span class='clj-double'>5.114940953226819</span>","value":"5.114940953226819"}],"value":"(2.318456538467948 5.114940953226819)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>12.933503740903923</span>","value":"12.933503740903923"},{"type":"html","content":"<span class='clj-double'>4.821983335028888</span>","value":"4.821983335028888"}],"value":"(12.933503740903923 4.821983335028888)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>8.84569982647248</span>","value":"8.84569982647248"},{"type":"html","content":"<span class='clj-double'>0.10462060838335674</span>","value":"0.10462060838335674"}],"value":"(8.84569982647248 0.10462060838335674)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>10.599481722995883</span>","value":"10.599481722995883"},{"type":"html","content":"<span class='clj-double'>9.55284853071311</span>","value":"9.55284853071311"}],"value":"(10.599481722995883 9.55284853071311)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>9.828752646592678</span>","value":"9.828752646592678"},{"type":"html","content":"<span class='clj-double'>5.1460658090056555</span>","value":"5.1460658090056555"}],"value":"(9.828752646592678 5.1460658090056555)"}],"value":"((10.305420494927546 9.588391659903625) (3.4844753909507107 2.0646000723020763) (-0.9820216446274315 1.7939724465821705) (2.318456538467948 5.114940953226819) (12.933503740903923 4.821983335028888) (8.84569982647248 0.10462060838335674) (10.599481722995883 9.55284853071311) (9.828752646592678 5.1460658090056555))"}],"value":"(1 ((10.305420494927546 9.588391659903625) (3.4844753909507107 2.0646000723020763) (-0.9820216446274315 1.7939724465821705) (2.318456538467948 5.114940953226819) (12.933503740903923 4.821983335028888) (8.84569982647248 0.10462060838335674) (10.599481722995883 9.55284853071311) (9.828752646592678 5.1460658090056555)))"}],"value":"[[[#'bounce-worksheet/lazy-samples0,#'bounce-worksheet/samples0],#'bounce-worksheet/best-sample0],(1 ((10.305420494927546 9.588391659903625) (3.4844753909507107 2.0646000723020763) (-0.9820216446274315 1.7939724465821705) (2.318456538467948 5.114940953226819) (12.933503740903923 4.821983335028888) (8.84569982647248 0.10462060838335674) (10.599481722995883 9.55284853071311) (9.828752646592678 5.1460658090056555)))]"}
 ;; <=
 
 ;; @@
 (show-world-simulation (first (rest best-sample0)))
 ;; @@
 ;; =>
-;;; {"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x3142c0ac &quot;quil.Applet[panel8,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x3142c0ac \"quil.Applet[panel8,0,0,600x500,layout=java.awt.FlowLayout]\"]"}
+;;; {"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x9783874 &quot;quil.Applet[panel12,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x9783874 \"quil.Applet[panel12,0,0,600x500,layout=java.awt.FlowLayout]\"]"}
 ;; <=
 
 ;; @@
@@ -127,25 +134,85 @@ best-sample0
 ;; <=
 
 ;; @@
-(def lazy-samples1 
+(def lazy-samples1
   (doquery :lmh physics1 []))
 (def samples1 
   (map :result (take-nth 10 (take 2000 (drop 1000 lazy-samples1)))))
-(def best-sample1 
+(def best-sample1
   (reduce (fn [acc x] (if (> (first x) (first acc)) x acc))
           samples1))
 best-sample1
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/lazy-samples1</span>","value":"#'bounce-worksheet/lazy-samples1"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/samples1</span>","value":"#'bounce-worksheet/samples1"}],"value":"[#'bounce-worksheet/lazy-samples1,#'bounce-worksheet/samples1]"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/best-sample1</span>","value":"#'bounce-worksheet/best-sample1"}],"value":"[[#'bounce-worksheet/lazy-samples1,#'bounce-worksheet/samples1],#'bounce-worksheet/best-sample1]"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>18</span>","value":"18"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-2.7326274256447585</span>","value":"-2.7326274256447585"},{"type":"html","content":"<span class='clj-double'>1.9734225896970048</span>","value":"1.9734225896970048"}],"value":"(-2.7326274256447585 1.9734225896970048)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>12.686295446692291</span>","value":"12.686295446692291"},{"type":"html","content":"<span class='clj-double'>1.6660592328463064</span>","value":"1.6660592328463064"}],"value":"(12.686295446692291 1.6660592328463064)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-4.025526688775204</span>","value":"-4.025526688775204"},{"type":"html","content":"<span class='clj-double'>3.960510667506525</span>","value":"3.960510667506525"}],"value":"(-4.025526688775204 3.960510667506525)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>2.5333209414674034</span>","value":"2.5333209414674034"},{"type":"html","content":"<span class='clj-double'>4.360790694204915</span>","value":"4.360790694204915"}],"value":"(2.5333209414674034 4.360790694204915)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>10.740960155293468</span>","value":"10.740960155293468"},{"type":"html","content":"<span class='clj-double'>1.7972292704871595</span>","value":"1.7972292704871595"}],"value":"(10.740960155293468 1.7972292704871595)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-1.861459312226196</span>","value":"-1.861459312226196"},{"type":"html","content":"<span class='clj-double'>0.18174043017553876</span>","value":"0.18174043017553876"}],"value":"(-1.861459312226196 0.18174043017553876)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>6.402533460007597</span>","value":"6.402533460007597"},{"type":"html","content":"<span class='clj-double'>4.0138466809352895</span>","value":"4.0138466809352895"}],"value":"(6.402533460007597 4.0138466809352895)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-2.389253439837588</span>","value":"-2.389253439837588"},{"type":"html","content":"<span class='clj-double'>3.9777269747822053</span>","value":"3.9777269747822053"}],"value":"(-2.389253439837588 3.9777269747822053)"}],"value":"((-2.7326274256447585 1.9734225896970048) (12.686295446692291 1.6660592328463064) (-4.025526688775204 3.960510667506525) (2.5333209414674034 4.360790694204915) (10.740960155293468 1.7972292704871595) (-1.861459312226196 0.18174043017553876) (6.402533460007597 4.0138466809352895) (-2.389253439837588 3.9777269747822053))"}],"value":"(18 ((-2.7326274256447585 1.9734225896970048) (12.686295446692291 1.6660592328463064) (-4.025526688775204 3.960510667506525) (2.5333209414674034 4.360790694204915) (10.740960155293468 1.7972292704871595) (-1.861459312226196 0.18174043017553876) (6.402533460007597 4.0138466809352895) (-2.389253439837588 3.9777269747822053)))"}],"value":"[[[#'bounce-worksheet/lazy-samples1,#'bounce-worksheet/samples1],#'bounce-worksheet/best-sample1],(18 ((-2.7326274256447585 1.9734225896970048) (12.686295446692291 1.6660592328463064) (-4.025526688775204 3.960510667506525) (2.5333209414674034 4.360790694204915) (10.740960155293468 1.7972292704871595) (-1.861459312226196 0.18174043017553876) (6.402533460007597 4.0138466809352895) (-2.389253439837588 3.9777269747822053)))]"}
+;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/best-sample1</span>","value":"#'bounce-worksheet/best-sample1"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>0</span>","value":"0"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>2.2813094250642045</span>","value":"2.2813094250642045"},{"type":"html","content":"<span class='clj-double'>5.788361603230571</span>","value":"5.788361603230571"}],"value":"(2.2813094250642045 5.788361603230571)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>10.043024359353142</span>","value":"10.043024359353142"},{"type":"html","content":"<span class='clj-double'>9.123235108954454</span>","value":"9.123235108954454"}],"value":"(10.043024359353142 9.123235108954454)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>9.157555234169347</span>","value":"9.157555234169347"},{"type":"html","content":"<span class='clj-double'>8.431794169102817</span>","value":"8.431794169102817"}],"value":"(9.157555234169347 8.431794169102817)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>8.43032961077778</span>","value":"8.43032961077778"},{"type":"html","content":"<span class='clj-double'>2.4676060204834482</span>","value":"2.4676060204834482"}],"value":"(8.43032961077778 2.4676060204834482)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>6.848086724122507</span>","value":"6.848086724122507"},{"type":"html","content":"<span class='clj-double'>2.8298333396027586</span>","value":"2.8298333396027586"}],"value":"(6.848086724122507 2.8298333396027586)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>8.61759829532771</span>","value":"8.61759829532771"},{"type":"html","content":"<span class='clj-double'>3.322702589374622</span>","value":"3.322702589374622"}],"value":"(8.61759829532771 3.322702589374622)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>7.738918971337561</span>","value":"7.738918971337561"},{"type":"html","content":"<span class='clj-double'>1.0521424135475366</span>","value":"1.0521424135475366"}],"value":"(7.738918971337561 1.0521424135475366)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>0.8920793582330697</span>","value":"0.8920793582330697"},{"type":"html","content":"<span class='clj-double'>7.541763620642823</span>","value":"7.541763620642823"}],"value":"(0.8920793582330697 7.541763620642823)"}],"value":"((2.2813094250642045 5.788361603230571) (10.043024359353142 9.123235108954454) (9.157555234169347 8.431794169102817) (8.43032961077778 2.4676060204834482) (6.848086724122507 2.8298333396027586) (8.61759829532771 3.322702589374622) (7.738918971337561 1.0521424135475366) (0.8920793582330697 7.541763620642823))"}],"value":"(0 ((2.2813094250642045 5.788361603230571) (10.043024359353142 9.123235108954454) (9.157555234169347 8.431794169102817) (8.43032961077778 2.4676060204834482) (6.848086724122507 2.8298333396027586) (8.61759829532771 3.322702589374622) (7.738918971337561 1.0521424135475366) (0.8920793582330697 7.541763620642823)))"}],"value":"[#'bounce-worksheet/best-sample1,(0 ((2.2813094250642045 5.788361603230571) (10.043024359353142 9.123235108954454) (9.157555234169347 8.431794169102817) (8.43032961077778 2.4676060204834482) (6.848086724122507 2.8298333396027586) (8.61759829532771 3.322702589374622) (7.738918971337561 1.0521424135475366) (0.8920793582330697 7.541763620642823)))]"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/lazy-samples1</span>","value":"#'bounce-worksheet/lazy-samples1"}],"value":"[[#'bounce-worksheet/best-sample1,(0 ((2.2813094250642045 5.788361603230571) (10.043024359353142 9.123235108954454) (9.157555234169347 8.431794169102817) (8.43032961077778 2.4676060204834482) (6.848086724122507 2.8298333396027586) (8.61759829532771 3.322702589374622) (7.738918971337561 1.0521424135475366) (0.8920793582330697 7.541763620642823)))],#'bounce-worksheet/lazy-samples1]"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/samples1</span>","value":"#'bounce-worksheet/samples1"}],"value":"[[[#'bounce-worksheet/best-sample1,(0 ((2.2813094250642045 5.788361603230571) (10.043024359353142 9.123235108954454) (9.157555234169347 8.431794169102817) (8.43032961077778 2.4676060204834482) (6.848086724122507 2.8298333396027586) (8.61759829532771 3.322702589374622) (7.738918971337561 1.0521424135475366) (0.8920793582330697 7.541763620642823)))],#'bounce-worksheet/lazy-samples1],#'bounce-worksheet/samples1]"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/best-sample1</span>","value":"#'bounce-worksheet/best-sample1"}],"value":"[[[[#'bounce-worksheet/best-sample1,(0 ((2.2813094250642045 5.788361603230571) (10.043024359353142 9.123235108954454) (9.157555234169347 8.431794169102817) (8.43032961077778 2.4676060204834482) (6.848086724122507 2.8298333396027586) (8.61759829532771 3.322702589374622) (7.738918971337561 1.0521424135475366) (0.8920793582330697 7.541763620642823)))],#'bounce-worksheet/lazy-samples1],#'bounce-worksheet/samples1],#'bounce-worksheet/best-sample1]"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>20</span>","value":"20"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-4.456097693810728</span>","value":"-4.456097693810728"},{"type":"html","content":"<span class='clj-double'>1.6553462064030988</span>","value":"1.6553462064030988"}],"value":"(-4.456097693810728 1.6553462064030988)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>6.935040246215556</span>","value":"6.935040246215556"},{"type":"html","content":"<span class='clj-double'>0.7519240794436888</span>","value":"0.7519240794436888"}],"value":"(6.935040246215556 0.7519240794436888)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>1.127714764912355</span>","value":"1.127714764912355"},{"type":"html","content":"<span class='clj-double'>6.211719381976934</span>","value":"6.211719381976934"}],"value":"(1.127714764912355 6.211719381976934)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>11.772572631348455</span>","value":"11.772572631348455"},{"type":"html","content":"<span class='clj-double'>8.792670218628565</span>","value":"8.792670218628565"}],"value":"(11.772572631348455 8.792670218628565)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-1.3242913891126906</span>","value":"-1.3242913891126906"},{"type":"html","content":"<span class='clj-double'>0.43075348294855376</span>","value":"0.43075348294855376"}],"value":"(-1.3242913891126906 0.43075348294855376)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-2.4473131164381465</span>","value":"-2.4473131164381465"},{"type":"html","content":"<span class='clj-double'>2.9243102569000046</span>","value":"2.9243102569000046"}],"value":"(-2.4473131164381465 2.9243102569000046)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>1.9728184660659718</span>","value":"1.9728184660659718"},{"type":"html","content":"<span class='clj-double'>8.504981844078197</span>","value":"8.504981844078197"}],"value":"(1.9728184660659718 8.504981844078197)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>10.92844930810266</span>","value":"10.92844930810266"},{"type":"html","content":"<span class='clj-double'>4.935858168232938</span>","value":"4.935858168232938"}],"value":"(10.92844930810266 4.935858168232938)"}],"value":"((-4.456097693810728 1.6553462064030988) (6.935040246215556 0.7519240794436888) (1.127714764912355 6.211719381976934) (11.772572631348455 8.792670218628565) (-1.3242913891126906 0.43075348294855376) (-2.4473131164381465 2.9243102569000046) (1.9728184660659718 8.504981844078197) (10.92844930810266 4.935858168232938))"}],"value":"(20 ((-4.456097693810728 1.6553462064030988) (6.935040246215556 0.7519240794436888) (1.127714764912355 6.211719381976934) (11.772572631348455 8.792670218628565) (-1.3242913891126906 0.43075348294855376) (-2.4473131164381465 2.9243102569000046) (1.9728184660659718 8.504981844078197) (10.92844930810266 4.935858168232938)))"}],"value":"[[[[[#'bounce-worksheet/best-sample1,(0 ((2.2813094250642045 5.788361603230571) (10.043024359353142 9.123235108954454) (9.157555234169347 8.431794169102817) (8.43032961077778 2.4676060204834482) (6.848086724122507 2.8298333396027586) (8.61759829532771 3.322702589374622) (7.738918971337561 1.0521424135475366) (0.8920793582330697 7.541763620642823)))],#'bounce-worksheet/lazy-samples1],#'bounce-worksheet/samples1],#'bounce-worksheet/best-sample1],(20 ((-4.456097693810728 1.6553462064030988) (6.935040246215556 0.7519240794436888) (1.127714764912355 6.211719381976934) (11.772572631348455 8.792670218628565) (-1.3242913891126906 0.43075348294855376) (-2.4473131164381465 2.9243102569000046) (1.9728184660659718 8.504981844078197) (10.92844930810266 4.935858168232938)))]"}
 ;; <=
 
 ;; @@
 (show-world-simulation (first (rest best-sample1)))
 ;; @@
 ;; =>
-;;; {"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x11c5d2ef &quot;quil.Applet[panel11,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x11c5d2ef \"quil.Applet[panel11,0,0,600x500,layout=java.awt.FlowLayout]\"]"}
+;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x404ef36d &quot;quil.Applet[panel5,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x404ef36d \"quil.Applet[panel5,0,0,600x500,layout=java.awt.FlowLayout]\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x540f3abe &quot;quil.Applet[panel6,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x540f3abe \"quil.Applet[panel6,0,0,600x500,layout=java.awt.FlowLayout]\"]"}],"value":"[#object[quil.Applet 0x404ef36d \"quil.Applet[panel5,0,0,600x500,layout=java.awt.FlowLayout]\"],#object[quil.Applet 0x540f3abe \"quil.Applet[panel6,0,0,600x500,layout=java.awt.FlowLayout]\"]]"}
 ;; <=
+
+;; **
+;;; ## physics1 with stochastic conditioning
+;;; 
+;;; I modified simulate-world so that it gets an optional extra argument --- 20 random numbers. This way, I can generate stochastic conditioning in the query.
+;; **
+
+;; @@
+(with-primitive-procedures
+  [create-world simulate-world balls-in-box]
+  (defquery physics1s []
+    (let [n-bumpers 8
+          f (fn [] (list 
+                     (sample (uniform-continuous -5 14))
+                     (sample (uniform-continuous 0 10))))
+          bs (repeatedly n-bumpers f)
+          w0 (create-world bs)
+          w1 (simulate-world w0 
+                             ;; stochastic conditioning
+                             (vec (repeatedly 
+                                    20 
+                                    (fn [] 
+                                      (sample (tag :stochastic 
+                                                   (uniform-continuous 0 1)))))))
+          num-balls (balls-in-box w1)]
+      (observe (normal num-balls 1) 20)
+      (list num-balls bs))))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/physics1s</span>","value":"#'bounce-worksheet/physics1s"}
+;; <=
+
+;; **
+;;; Now, sampling randomness in the initial position is a part of the chain, so more iterations are required in SMH for fair comparison.
+;; **
+
+;; @@
+(def lazy-samples1s 
+  (doquery :smh physics1s []))
+(def samples1s 
+  (map :result (take-nth 10 (take 4000 (drop 2000 lazy-samples1s)))))
+(def best-sample1s
+  (reduce (fn [acc x] (if (> (first x) (first acc)) x acc))
+          samples1s))
+best-sample1s
+;; @@
+;; =>
+;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/lazy-samples1s</span>","value":"#'bounce-worksheet/lazy-samples1s"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/samples1s</span>","value":"#'bounce-worksheet/samples1s"}],"value":"[#'bounce-worksheet/lazy-samples1s,#'bounce-worksheet/samples1s]"}
+;; <=
+
+;; @@
+(show-world-simulation (first (rest best-sample1s)))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x2ac7d3f6 &quot;quil.Applet[panel7,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x2ac7d3f6 \"quil.Applet[panel7,0,0,600x500,layout=java.awt.FlowLayout]\"]"}
+;; <=
+
+;; **
+;;; End of physics1-sc
+;; **
 
 ;; @@
 (with-primitive-procedures
@@ -156,7 +223,7 @@ best-sample1
                      (sample (uniform-continuous -5 14))
                      (sample (uniform-continuous 0 10))))
           bs (repeatedly n-bumpers f)
-          w0 (create-world bs)
+          w0 (create-world bs) 
           w1 (simulate-world w0)
           num-balls (balls-in-box w1)]
       (observe (normal n-bumpers 2) 0)
@@ -166,6 +233,10 @@ best-sample1
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/physics2</span>","value":"#'bounce-worksheet/physics2"}
 ;; <=
+
+;; **
+;;; 
+;; **
 
 ;; @@
 (def lazy-samples2 
@@ -187,16 +258,52 @@ best-sample1
 best-sample2
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/lazy-samples2</span>","value":"#'bounce-worksheet/lazy-samples2"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/samples2</span>","value":"#'bounce-worksheet/samples2"}],"value":"[#'bounce-worksheet/lazy-samples2,#'bounce-worksheet/samples2]"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/is-better</span>","value":"#'bounce-worksheet/is-better"}],"value":"[[#'bounce-worksheet/lazy-samples2,#'bounce-worksheet/samples2],#'bounce-worksheet/is-better]"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/best-sample2</span>","value":"#'bounce-worksheet/best-sample2"}],"value":"[[[#'bounce-worksheet/lazy-samples2,#'bounce-worksheet/samples2],#'bounce-worksheet/is-better],#'bounce-worksheet/best-sample2]"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>18</span>","value":"18"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-2.6619739919490932</span>","value":"-2.6619739919490932"},{"type":"html","content":"<span class='clj-double'>3.5514411362154497</span>","value":"3.5514411362154497"}],"value":"(-2.6619739919490932 3.5514411362154497)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>6.771934435730125</span>","value":"6.771934435730125"},{"type":"html","content":"<span class='clj-double'>0.21577687242230414</span>","value":"0.21577687242230414"}],"value":"(6.771934435730125 0.21577687242230414)"}],"value":"((-2.6619739919490932 3.5514411362154497) (6.771934435730125 0.21577687242230414))"}],"value":"(18 ((-2.6619739919490932 3.5514411362154497) (6.771934435730125 0.21577687242230414)))"}],"value":"[[[[#'bounce-worksheet/lazy-samples2,#'bounce-worksheet/samples2],#'bounce-worksheet/is-better],#'bounce-worksheet/best-sample2],(18 ((-2.6619739919490932 3.5514411362154497) (6.771934435730125 0.21577687242230414)))]"}
+;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/lazy-samples2</span>","value":"#'bounce-worksheet/lazy-samples2"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/samples2</span>","value":"#'bounce-worksheet/samples2"}],"value":"[#'bounce-worksheet/lazy-samples2,#'bounce-worksheet/samples2]"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/is-better</span>","value":"#'bounce-worksheet/is-better"}],"value":"[[#'bounce-worksheet/lazy-samples2,#'bounce-worksheet/samples2],#'bounce-worksheet/is-better]"}
 ;; <=
 
 ;; @@
 (show-world-simulation (first (rest best-sample2)))
 ;; @@
-;; =>
-;;; {"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0xbce9dd4 &quot;quil.Applet[panel14,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0xbce9dd4 \"quil.Applet[panel14,0,0,600x500,layout=java.awt.FlowLayout]\"]"}
-;; <=
+
+;; **
+;;; # physics2 with stochastic conditioning
+;; **
 
 ;; @@
+(with-primitive-procedures
+  [create-world simulate-world balls-in-box]
+  (defquery physics2s []
+    (let [n-bumpers (sample (poisson 6))
+          f (fn [] (list 
+                     (sample (uniform-continuous -5 14))
+                     (sample (uniform-continuous 0 10))))
+          bs (repeatedly n-bumpers f)
+          w0 (create-world bs) 
+          bs (repeatedly n-bumpers f)
+          w0 (create-world bs)
+          w1 (simulate-world w0 
+                             ;; stochastic conditioning
+                             (vec (repeatedly 
+                                    20 
+                                    (fn [] 
+                                      (sample (tag :stochastic 
+                                                   (uniform-continuous 0 1)))))))num-balls (balls-in-box w1)]
+      (observe (normal n-bumpers 2) 0)
+      (observe (normal num-balls 1) 20)
+      (list num-balls bs))))
+;; @@
 
+;; @@
+(def lazy-samples2s
+  (doquery :smh physics2s []))
+(def samples2s 
+  (map :result (take-nth 10 (take 400 (drop 20 lazy-samples2s)))))
+(def best-sample2s
+  (reduce (fn [acc x] (if (is-better x acc) x acc)) 
+          samples2s))
+best-sample2s
+;; @@
+
+;; @@
+(show-world-simulation (first (rest best-sample2s)))
 ;; @@
