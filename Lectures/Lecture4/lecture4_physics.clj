@@ -9,13 +9,15 @@
 ;; **
 
 ;; @@
-;; nstools did not work for me, something is broken and I haven't succeeded in fixing so far.
-;; Rewrote this fragment using plain Clojure ns form.
-(ns bounce-worksheet
-  (:require [gorilla-plot.core :as plot])
-  (:use [anglican core emit runtime
-         [state :only [get-predicts get-log-weight get-result]]])
-     (:require [org.nfrac.cljbox2d.core :refer [position]]))
+(use 'nstools.ns)
+
+(ns+ bounce-worksheet
+     (:like anglican-user.worksheet)
+     (:require [org.nfrac.cljbox2d.core :refer [position]])
+     (:use [anglican [state 
+                      :only [get-predicts 
+                             get-log-weight 
+                             get-result]]]))
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}
@@ -40,7 +42,7 @@
 (show-world-simulation bumper-location1)
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/bumper-location1</span>","value":"#'bounce-worksheet/bumper-location1"},{"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x148b0a0d &quot;quil.Applet[panel0,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x148b0a0d \"quil.Applet[panel0,0,0,600x500,layout=java.awt.FlowLayout]\"]"}],"value":"[#'bounce-worksheet/bumper-location1,#object[quil.Applet 0x148b0a0d \"quil.Applet[panel0,0,0,600x500,layout=java.awt.FlowLayout]\"]]"}
+;;; {"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x27920182 &quot;quil.Applet[panel0,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x27920182 \"quil.Applet[panel0,0,0,600x500,layout=java.awt.FlowLayout]\"]"}
 ;; <=
 
 ;; @@
@@ -200,14 +202,14 @@ best-sample1
 best-sample1s
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/lazy-samples1s</span>","value":"#'bounce-worksheet/lazy-samples1s"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/samples1s</span>","value":"#'bounce-worksheet/samples1s"}],"value":"[#'bounce-worksheet/lazy-samples1s,#'bounce-worksheet/samples1s]"}
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/samples1s</span>","value":"#'bounce-worksheet/samples1s"}
 ;; <=
 
 ;; @@
 (show-world-simulation (first (rest best-sample1s)))
 ;; @@
 ;; =>
-;;; {"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x2ac7d3f6 &quot;quil.Applet[panel7,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x2ac7d3f6 \"quil.Applet[panel7,0,0,600x500,layout=java.awt.FlowLayout]\"]"}
+;;; {"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x5d80f1e5 &quot;quil.Applet[panel8,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x5d80f1e5 \"quil.Applet[panel8,0,0,600x500,layout=java.awt.FlowLayout]\"]"}
 ;; <=
 
 ;; **
@@ -292,18 +294,36 @@ best-sample2
       (observe (normal num-balls 1) 20)
       (list num-balls bs))))
 ;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/physics2s</span>","value":"#'bounce-worksheet/physics2s"}
+;; <=
 
 ;; @@
 (def lazy-samples2s
   (doquery :smh physics2s []))
 (def samples2s 
-  (map :result (take-nth 10 (take 400 (drop 20 lazy-samples2s)))))
+  (map :result (take-nth 10 (take 4000 (drop 2000 lazy-samples2s)))))
+(defn is-better [x y]
+  (let [num-bumpers-less (< (count (second x)) (count (second y)))
+        num-balls-more (> (first x) (first y))
+        num-balls-equal (= (first x) (first y))
+        x-above-threshold (> (first x) 15)
+        y-above-threshold (> (first x) 15)]
+    (or (and x-above-threshold num-bumpers-less)
+        (and num-balls-equal num-bumpers-less)
+        num-balls-more)))
 (def best-sample2s
   (reduce (fn [acc x] (if (is-better x acc) x acc)) 
           samples2s))
 best-sample2s
 ;; @@
+;; =>
+;;; {"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"list-like","open":"","close":"","separator":"</pre><pre>","items":[{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/lazy-samples2s</span>","value":"#'bounce-worksheet/lazy-samples2s"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/samples2s</span>","value":"#'bounce-worksheet/samples2s"}],"value":"[#'bounce-worksheet/lazy-samples2s,#'bounce-worksheet/samples2s]"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/is-better</span>","value":"#'bounce-worksheet/is-better"}],"value":"[[#'bounce-worksheet/lazy-samples2s,#'bounce-worksheet/samples2s],#'bounce-worksheet/is-better]"},{"type":"html","content":"<span class='clj-var'>#&#x27;bounce-worksheet/best-sample2s</span>","value":"#'bounce-worksheet/best-sample2s"}],"value":"[[[#'bounce-worksheet/lazy-samples2s,#'bounce-worksheet/samples2s],#'bounce-worksheet/is-better],#'bounce-worksheet/best-sample2s]"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>17</span>","value":"17"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>11.183503640021986</span>","value":"11.183503640021986"},{"type":"html","content":"<span class='clj-double'>0.5700484224979818</span>","value":"0.5700484224979818"}],"value":"(11.183503640021986 0.5700484224979818)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-1.8651830944233692</span>","value":"-1.8651830944233692"},{"type":"html","content":"<span class='clj-double'>1.0534235304832684</span>","value":"1.0534235304832684"}],"value":"(-1.8651830944233692 1.0534235304832684)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>7.9121260123403765</span>","value":"7.9121260123403765"},{"type":"html","content":"<span class='clj-double'>2.1797982243677483</span>","value":"2.1797982243677483"}],"value":"(7.9121260123403765 2.1797982243677483)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>6.116690402369851</span>","value":"6.116690402369851"},{"type":"html","content":"<span class='clj-double'>6.809059702894407</span>","value":"6.809059702894407"}],"value":"(6.116690402369851 6.809059702894407)"},{"type":"list-like","open":"<span class='clj-list'>(</span>","close":"<span class='clj-list'>)</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>11.729161365858841</span>","value":"11.729161365858841"},{"type":"html","content":"<span class='clj-double'>2.598336524237197</span>","value":"2.598336524237197"}],"value":"(11.729161365858841 2.598336524237197)"}],"value":"((11.183503640021986 0.5700484224979818) (-1.8651830944233692 1.0534235304832684) (7.9121260123403765 2.1797982243677483) (6.116690402369851 6.809059702894407) (11.729161365858841 2.598336524237197))"}],"value":"(17 ((11.183503640021986 0.5700484224979818) (-1.8651830944233692 1.0534235304832684) (7.9121260123403765 2.1797982243677483) (6.116690402369851 6.809059702894407) (11.729161365858841 2.598336524237197)))"}],"value":"[[[[#'bounce-worksheet/lazy-samples2s,#'bounce-worksheet/samples2s],#'bounce-worksheet/is-better],#'bounce-worksheet/best-sample2s],(17 ((11.183503640021986 0.5700484224979818) (-1.8651830944233692 1.0534235304832684) (7.9121260123403765 2.1797982243677483) (6.116690402369851 6.809059702894407) (11.729161365858841 2.598336524237197)))]"}
+;; <=
 
 ;; @@
 (show-world-simulation (first (rest best-sample2s)))
 ;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>#object[quil.Applet 0x3444bb0b &quot;quil.Applet[panel9,0,0,600x500,layout=java.awt.FlowLayout]&quot;]</span>","value":"#object[quil.Applet 0x3444bb0b \"quil.Applet[panel9,0,0,600x500,layout=java.awt.FlowLayout]\"]"}
+;; <=
